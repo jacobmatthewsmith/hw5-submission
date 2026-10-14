@@ -1,0 +1,28 @@
+# Secrets: never commit a real .env (the template .env.example is committed)
+.env
+.env.*
+!.env.example
+frontend/.env.local
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+
+# Node / Vite
+node_modules/
+frontend/dist/
+*.tsbuildinfo
+
+# Local clutter
+.DS_Store
+*.log
+*.tmp
+output/.audit_trail.lock
+.claude/
+
+# The instructor's zip; its database is committed as data/campus_customs.db
+data.zip
+
+# Note: data/campus_customs.db, data/campus_customs_new.db and everything in
+# output/ (harness, smoke test, reports, audit trail) are intentionally tracked.

@@ -1,0 +1,478 @@
+{
+  "run": {
+    "description": "Clean full run of tickets 101, 102, 103 on gpt-6-luna, one at a time, after resetting data/campus_customs_new.db from data/campus_customs.db.",
+    "reset_audit_record": 21,
+    "ticket_run_audit_records": [
+      28,
+      32,
+      39
+    ],
+    "note": "The working DB was reset again at 2026-10-14T23:43:28.182+00:00 after the run; it was restored to the run's end state by replaying the run's recorded writes (audit record 41, 16 writes, 0 mismatches, no model calls)."
+  },
+  "cash": {
+    "starting_checking": 3400.0,
+    "ledger": [
+      {
+        "ticket": 101,
+        "approval_id": 1,
+        "kind": "invoice_payment",
+        "amount": 840.0,
+        "cash_change": -840.0,
+        "balance_after": 2560.0
+      },
+      {
+        "ticket": 101,
+        "approval_id": 2,
+        "kind": "purchase_order",
+        "amount": 8.0,
+        "cash_change": 0.0,
+        "balance_after": 2560.0
+      },
+      {
+        "ticket": 102,
+        "approval_id": 3,
+        "kind": "rent_payment",
+        "amount": 2400.0,
+        "cash_change": -2400.0,
+        "balance_after": 160.0
+      },
+      {
+        "ticket": 103,
+        "approval_id": 4,
+        "kind": "purchase_order",
+        "amount": 264.0,
+        "cash_change": 0.0,
+        "balance_after": 160.0
+      }
+    ],
+    "computed_ending_checking": 160.0,
+    "cash_accounts_checking": 160.0,
+    "delta": 0.0,
+    "sum_of_payments_table": 3240.0
+  },
+  "tickets": [
+    {
+      "id": 101,
+      "type": "customer_order",
+      "requester": "Tauhid Zaman",
+      "subject": "Bulldog tee",
+      "final_status": "waiting_on_approval",
+      "boss_final_status": "waiting_on_approval",
+      "headline": "Order awaits vendor clearance",
+      "outcome": "Size S tee is out of stock and invoice #501 was blocking Bulldog Print Co. Accounting requested the $840 invoice payment and a $8 one-unit purchase order; both were approved by a human during the run (invoice paid, PO placed, expected arrival 2026-09-05). Customer Service saved draft #1 for Tauhid. The Boss finished with waiting_on_approval based on the earlier handoff report, so the ticket's status is stale: nothing is actually pending.",
+      "routing": {
+        "routed_to": "inventory",
+        "specialists_joined": [
+          "inventory",
+          "accounting",
+          "customer_service"
+        ],
+        "handoffs": [
+          {
+            "from": "boss",
+            "to": "inventory",
+            "need": "route"
+          },
+          {
+            "from": "inventory",
+            "to": "accounting",
+            "need": "payment_or_po_request"
+          },
+          {
+            "from": "inventory",
+            "to": "customer_service",
+            "need": "customer_draft"
+          }
+        ]
+      },
+      "agents": [
+        {
+          "agent": "boss",
+          "role": "boss (lead)",
+          "visit": 1,
+          "audit_record": 27,
+          "contribution": "We cannot fulfill the size S tee from stock, and Bulldog Print Co cannot ship while overdue invoice 501 is unpaid. The ticket remains waiting on human approval of the invoice payment and one-unit purchase order; no arrival date is promised.",
+          "technical_summary": "Fetched ticket 101, set it in progress, and routed it once to Inventory. Inventory reported zero size S on hand, invoice 501 overdue, and pending approval requests 1 (invoice payment) and 2 (one-unit PO), plus customer availability draft 1; I set the ticket to waiting_on_approval. Inventory involved Accounting for approvals and Customer Service for the draft.",
+          "mcp_tools_used": {
+            "ticket_dossier_fetch": 1,
+            "status_note_update": 2,
+            "route_ticket": 1
+          },
+          "approval_ids_filed": [],
+          "draft_ids": [
+            1
+          ],
+          "model_requests": 19
+        },
+        {
+          "agent": "inventory",
+          "role": "routed specialist",
+          "visit": 1,
+          "audit_record": 26,
+          "contribution": "The requested size S cannot be filled from stock: none are on hand, so one unit must be restocked. Bulldog Print Co is the matching apparel supplier, but it is blocked by overdue invoice 501; Accounting filed pending payment and PO approvals, and Customer Service saved an availability draft.",
+          "technical_summary": "Called stock_margin_quote once: CC-TEE-WHITE size S has 0 on hand and a shortfall of 1; M/L/XL stock is 5/3/2. supplier_catalog_search and vendor_invoice_blockers confirmed Bulldog Print Co (vendor 1), 5-day lead time, blocked by invoice 501 for $840 due 2026-08-28, 3 days overdue; shop_today is 2026-08-31, so 2026-09-05 is only the nominal five-day arrival estimate if ordered today, not a reliable promise while blocked. Handed off payment_or_po_request to Accounting, which filed pending approvals 1 (invoice payment) and 2 (one-unit PO); handed off customer_draft to Customer Service, which saved draft 1. No approval has been executed and no vendor shipment is confirmed.",
+          "mcp_tools_used": {
+            "stock_margin_quote": 1,
+            "supplier_catalog_search": 1,
+            "vendor_invoice_blockers": 1,
+            "ask_teammate": 2
+          },
+          "approval_ids_filed": [
+            1,
+            2
+          ],
+          "draft_ids": [
+            1
+          ],
+          "model_requests": 14
+        },
+        {
+          "agent": "accounting",
+          "role": "helper",
+          "visit": 1,
+          "audit_record": 22,
+          "contribution": "Queued invoice 501 for human payment approval and filed a one-unit purchase order; Bulldog Print Co is blocked from shipping until the overdue invoice is paid. Checking remains $3,400, with $2,560 available after the $840 pending payment request; neither request has been executed.",
+          "technical_summary": "cash_position_report showed checking balance $3,400, available_after_pending $3,400, and invoice 501 open for $840, 3 days overdue. vendor_invoice_blockers confirmed vendor 1 cannot ship while invoice 501 is open. Filed pending invoice-payment approval 1 for $840 and purchase-order approval 2 for $8; after filings, cash balance is $3,400 and available_after_pending is $2,560 ($3,400 - $840), with the PO not treated as a cash commitment; no payments are recorded as made.",
+          "mcp_tools_used": {
+            "cash_position_report": 1,
+            "vendor_invoice_blockers": 1,
+            "approval_request_file": 2
+          },
+          "approval_ids_filed": [
+            1,
+            2
+          ],
+          "draft_ids": [],
+          "model_requests": 4
+        },
+        {
+          "agent": "customer_service",
+          "role": "helper",
+          "visit": 1,
+          "audit_record": 25,
+          "contribution": "Saved a draft telling Tauhid that size S is unavailable, a restock is being arranged but timing is uncertain, and the listed price is $28. The draft offers waiting or discussing another size without treating other sizes as substitutes.",
+          "technical_summary": "Called ticket_dossier_fetch and found no prior drafts, two pending approvals, and a five-day vendor lead time; then called stock_margin_quote, which confirmed size S stock 0, shortfall 1, and list price $28. Saved draft 1 with message_draft_post; it is a draft only and has not been sent.",
+          "mcp_tools_used": {
+            "ticket_dossier_fetch": 1,
+            "stock_margin_quote": 1,
+            "message_draft_post": 1
+          },
+          "approval_ids_filed": [],
+          "draft_ids": [
+            1
+          ],
+          "model_requests": 4
+        }
+      ],
+      "human_approvals": [
+        {
+          "approval_id": 1,
+          "kind": "invoice_payment",
+          "amount": 840.0,
+          "requested_by": "accounting",
+          "decision": "approve",
+          "approver": "jacob S",
+          "decided_at": "2026-10-14T23:32:18.716+00:00",
+          "decided_while_run_in_progress": true,
+          "moved_cash": true,
+          "result": "Paid $840.00 from checking (payment 1); invoice 501 marked paid; balance now $2560.00",
+          "audit_record": 23
+        },
+        {
+          "approval_id": 2,
+          "kind": "purchase_order",
+          "amount": 8.0,
+          "requested_by": "accounting",
+          "decision": "approve",
+          "approver": "jacob S",
+          "decided_at": "2026-10-14T23:32:23.345+00:00",
+          "decided_while_run_in_progress": true,
+          "moved_cash": false,
+          "result": "PO placed with Bulldog Print Co for 1 x CC-TEE-WHITE S ($8.00); expected arrival 2026-09-05",
+          "audit_record": 24
+        }
+      ],
+      "drafts": [
+        {
+          "draft_id": 1,
+          "author": "customer_service",
+          "recipient": "Tauhid Zaman",
+          "subject": "Update on your size S Bulldog tee",
+          "status": "draft",
+          "sent": false
+        }
+      ],
+      "usage": {
+        "requests": 19,
+        "tool_calls": 16,
+        "input_tokens": 49240,
+        "output_tokens": 3263
+      },
+      "ticket_run_id": "f94e999cee16",
+      "audit_record": 28,
+      "ran": {
+        "started_at": "2026-10-14T23:30:55.520+00:00",
+        "finished_at": "2026-10-14T23:32:46.235+00:00"
+      },
+      "cash_effect": {
+        "checking_before": 3400.0,
+        "checking_after": 2560.0,
+        "change": -840.0
+      }
+    },
+    {
+      "id": 102,
+      "type": "rent_notice",
+      "requester": "Elm City Properties",
+      "subject": "Rent due",
+      "final_status": "resolved",
+      "boss_final_status": "waiting_on_approval",
+      "headline": "Rent awaiting approval",
+      "outcome": "Facilities verified lease 1 ($2,400 due 2026-09-02, not overdue) and Accounting requested the rent payment. A human approved it after the run: checking went from $2,560 to $160 and the lease's next_due moved to 2026-10-02. The ticket closed itself as resolved once its only approval was paid.",
+      "routing": {
+        "routed_to": "facilities",
+        "specialists_joined": [
+          "facilities",
+          "accounting"
+        ],
+        "handoffs": [
+          {
+            "from": "boss",
+            "to": "facilities",
+            "need": "route"
+          },
+          {
+            "from": "facilities",
+            "to": "accounting",
+            "need": "payment_or_po_request"
+          }
+        ]
+      },
+      "agents": [
+        {
+          "agent": "boss",
+          "role": "boss (lead)",
+          "visit": 1,
+          "audit_record": 31,
+          "contribution": "Lease 1 confirms $2,400 rent is due 2026-09-02. Approval request 3 is pending; no payment has been made.",
+          "technical_summary": "Opened ticket 102 and routed it to Facilities to verify lease 1 and rent timing. Facilities confirmed the amount and due date and reported Accounting filed approval 3; I set the final ticket status to waiting_on_approval with a note. No draft was created.",
+          "mcp_tools_used": {
+            "ticket_dossier_fetch": 1,
+            "status_note_update": 2,
+            "route_ticket": 1
+          },
+          "approval_ids_filed": [],
+          "draft_ids": [],
+          "model_requests": 14
+        },
+        {
+          "agent": "facilities",
+          "role": "routed specialist",
+          "visit": 1,
+          "audit_record": 30,
+          "contribution": "Lease 1 confirms Elm City Properties\u2019 $2,400 rent is due 2026-09-02, two days after shop_today 2026-08-31. Accounting filed approval request 3; rent is not yet paid, and the ticket is awaiting human approval.",
+          "technical_summary": "Called `ticket_dossier_fetch` and `lease_rent_schedule` for lease 1; the landlord and amount match the notice, next_due is 2026-09-02, and days_until_due is 2. The lease schedule reports checking balance $2,560.00 and $160.00 after rent; Accounting reported from `cash_position_report` available_after_pending of $2,560.00 before filing, then filed approval 3 and reported $2,400.00 pending including this request, with no competing pending payments. Logged status `waiting_on_approval` with `status_note_update`; no draft was created.",
+          "mcp_tools_used": {
+            "ticket_dossier_fetch": 1,
+            "lease_rent_schedule": 1,
+            "ask_teammate": 1,
+            "status_note_update": 1
+          },
+          "approval_ids_filed": [
+            3
+          ],
+          "draft_ids": [],
+          "model_requests": 9
+        },
+        {
+          "agent": "accounting",
+          "role": "helper",
+          "visit": 1,
+          "audit_record": 29,
+          "contribution": "Filed the $2,400 rent payment request for human approval; it is due 2026-09-02. The request fits within checking, leaving $160 if approved, with no other pending payments creating a squeeze.",
+          "technical_summary": "Called `cash_position_report`: checking balance was $2,560.00 with $0 pending and $2,560.00 available after pending; there were no open invoices or pending approvals. Called `lease_rent_schedule` for lease 1: monthly rent is $2,400.00, due 2026-09-02 (2 days away), and balance after rent would be $160.00. Filed rent approval request ID 3 using `approval_request_file`; it remains pending and no money has moved, with cash check showing $2,560.00 balance and $2,400.00 total pending including this request.",
+          "mcp_tools_used": {
+            "cash_position_report": 1,
+            "lease_rent_schedule": 1,
+            "approval_request_file": 1
+          },
+          "approval_ids_filed": [
+            3
+          ],
+          "draft_ids": [],
+          "model_requests": 4
+        }
+      ],
+      "human_approvals": [
+        {
+          "approval_id": 3,
+          "kind": "rent_payment",
+          "amount": 2400.0,
+          "requested_by": "accounting",
+          "decision": "approve",
+          "approver": "jacob S",
+          "decided_at": "2026-10-14T23:34:51.810+00:00",
+          "decided_while_run_in_progress": false,
+          "moved_cash": true,
+          "result": "Paid $2400.00 from checking (payment 2); lease 1 next_due 2026-09-02 -> 2026-10-02; balance now $160.00",
+          "audit_record": 33
+        }
+      ],
+      "drafts": [],
+      "usage": {
+        "requests": 14,
+        "tool_calls": 11,
+        "input_tokens": 33581,
+        "output_tokens": 1687
+      },
+      "ticket_run_id": "54f0b4d4ca99",
+      "audit_record": 32,
+      "ran": {
+        "started_at": "2026-10-14T23:33:04.401+00:00",
+        "finished_at": "2026-10-14T23:34:07.579+00:00"
+      },
+      "cash_effect": {
+        "checking_before": 2560.0,
+        "checking_after": 160.0,
+        "change": -2400.0
+      }
+    },
+    {
+      "id": 103,
+      "type": "price_override",
+      "requester": "Yale AI Club",
+      "subject": "Bulk hoodie discount",
+      "final_status": "resolved",
+      "boss_final_status": "waiting_on_approval",
+      "headline": "Discount awaits restock approval",
+      "outcome": "8 size-M hoodies on hand, 12 short. Accounting set the 40% margin floor at $36.67/unit (a 36.78% discount) and the Boss approved that price conditional on restocking. The Boss brought Accounting back to request the $264 purchase order for the 12-unit shortfall (vendor unblocked because #501 was already paid); a human approved it, which placed the order on credit (no cash moved). No customer draft was created. Resolved means the approvals are done, not that the hoodies arrived.",
+      "routing": {
+        "routed_to": "inventory",
+        "specialists_joined": [
+          "inventory",
+          "accounting"
+        ],
+        "handoffs": [
+          {
+            "from": "boss",
+            "to": "inventory",
+            "need": "route"
+          },
+          {
+            "from": "inventory",
+            "to": "accounting",
+            "need": "margin_or_cash_review"
+          },
+          {
+            "from": "boss",
+            "to": "accounting",
+            "need": "payment_or_po_request"
+          }
+        ]
+      },
+      "agents": [
+        {
+          "agent": "boss",
+          "role": "boss (lead)",
+          "visit": 1,
+          "audit_record": 38,
+          "contribution": "Approve the maximum policy-compliant discount, 36.78% ($36.67 per hoodie), for the 20-unit request, conditional on approval of the 12-unit restock. Do not promise fulfillment before the PO and restock are cleared.",
+          "technical_summary": "Opened ticket 103, routed it once to Inventory, and Inventory consulted Accounting for the margin review. Inventory reported 8 size-M units on hand, a 12-unit shortfall, Bulldog Print Co's five-day lead and no shipping block; Accounting filed PO approval #4 for $264, with no cash moved. Set the ticket to waiting_on_approval; no customer draft was created.",
+          "mcp_tools_used": {
+            "ticket_dossier_fetch": 1,
+            "status_note_update": 2,
+            "route_ticket": 1,
+            "ask_teammate": 1
+          },
+          "approval_ids_filed": [],
+          "draft_ids": [],
+          "model_requests": 17
+        },
+        {
+          "agent": "inventory",
+          "role": "routed specialist",
+          "visit": 1,
+          "audit_record": 35,
+          "contribution": "There are 8 size-M hoodies on hand, leaving a shortfall of 12 for the requested 20. Apparel vendor Bulldog Print Co can ship (5-day lead; estimated arrival 2026-09-05 if ordered today); Accounting found the maximum discount meeting the 40% margin floor is 36.78% (about $36.67/unit).",
+          "technical_summary": "Called ticket_dossier_fetch, stock_margin_quote, supplier_catalog_search, and vendor_invoice_blockers; the requested size M has 8 on hand, shortfall 12, restock cost $264.00, and stock in other sizes is S 4, L 14, XL 6. Bulldog Print Co (vendor 1, apparel reprint) has lead_days 5, no open invoices, can ship, and arrival_if_ordered_today 2026-09-05. Handed off margin_or_cash_review to Accounting; Accounting reported 36.78% maximum discount at 40.0% margin, discounted unit price $36.67, order margin $293.33, and no approvals; no purchase order or customer draft was requested because this is a price_override.",
+          "mcp_tools_used": {
+            "ticket_dossier_fetch": 1,
+            "stock_margin_quote": 1,
+            "supplier_catalog_search": 1,
+            "vendor_invoice_blockers": 1,
+            "ask_teammate": 1
+          },
+          "approval_ids_filed": [],
+          "draft_ids": [],
+          "model_requests": 7
+        },
+        {
+          "agent": "accounting",
+          "role": "helper",
+          "visit": 1,
+          "audit_record": 34,
+          "contribution": "The maximum bulk discount that meets the 40% margin floor is 36.78%, for a discounted unit price of $36.67. At that price, unit margin is $14.67 and the 20-unit order margin is $293.33; no payment or purchase order was requested or filed.",
+          "technical_summary": "Called cash_position_report and stock_margin_quote for the requested 20 units, including a quote at the calculated discount. Policy floor calculation: price \u2265 $22 \u00f7 (1 \u2212 0.40) = $36.6667; discount \u2264 ($58 \u2212 $36.6667) \u00f7 $58 = 36.7816%, reported as 36.78%. Cash remains $160.00 checking balance and $160.00 available_after_pending; no approvals were created.",
+          "mcp_tools_used": {
+            "cash_position_report": 1,
+            "stock_margin_quote": 2
+          },
+          "approval_ids_filed": [],
+          "draft_ids": [],
+          "model_requests": 3
+        },
+        {
+          "agent": "accounting",
+          "role": "helper",
+          "visit": 2,
+          "audit_record": 36,
+          "contribution": "Filed purchase order approval #4 for the 12-unit CC-HOOD-NAVY size M shortfall at a database-computed $264. Bulldog Print Co is unblocked and has a 5-day lead time; the PO is pending approval and no payment has been made.",
+          "technical_summary": "Called cash_position_report: checking balance and available_after_pending were both $160.00, with $0 pending requests; no open invoices were listed. Called vendor_invoice_blockers for vendor 1: Bulldog Print Co can ship, has no open invoices, and lead time is 5 days. Filed purchase order approval #4 for 12 units, amount $264.00; the approval tool reports the PO is pending and no money has moved.",
+          "mcp_tools_used": {
+            "cash_position_report": 1,
+            "vendor_invoice_blockers": 1,
+            "approval_request_file": 1
+          },
+          "approval_ids_filed": [
+            4
+          ],
+          "draft_ids": [],
+          "model_requests": 4
+        }
+      ],
+      "human_approvals": [
+        {
+          "approval_id": 4,
+          "kind": "purchase_order",
+          "amount": 264.0,
+          "requested_by": "accounting",
+          "decision": "approve",
+          "approver": "jacob S",
+          "decided_at": "2026-10-14T23:36:37.192+00:00",
+          "decided_while_run_in_progress": true,
+          "moved_cash": false,
+          "result": "PO placed with Bulldog Print Co for 12 x CC-HOOD-NAVY M ($264.00); expected arrival 2026-09-05",
+          "audit_record": 37
+        }
+      ],
+      "drafts": [],
+      "usage": {
+        "requests": 17,
+        "tool_calls": 16,
+        "input_tokens": 46168,
+        "output_tokens": 2922
+      },
+      "ticket_run_id": "4e574ee0ad7c",
+      "audit_record": 39,
+      "ran": {
+        "started_at": "2026-10-14T23:34:59.104+00:00",
+        "finished_at": "2026-10-14T23:36:41.328+00:00"
+      },
+      "cash_effect": {
+        "checking_before": 160.0,
+        "checking_after": 160.0,
+        "change": 0.0
+      }
+    }
+  ]
+}
