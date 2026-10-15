@@ -8,6 +8,10 @@ How each section is organized:
 - **Prompt:** the first prompt I typed for that problem, copied word for word (typos included).
 - **Follow-up:** any later prompts for the same problem, also copied word for word. Each one is followed by a bracketed sentence explaining what was missing from the earlier prompt or why the follow-up was needed.
 
+Notes on scope:
+- The setup messages I sent before Problem 1 (pointing the assistant at the HW 5 folder, the expected file layout, and background on the assignment) are left out at my request. Everything from Problem 1 on is included.
+- A few times the assistant asked me a multiple-choice question and I answered by picking an option instead of typing. Those choices are noted in the bracketed sentences where they shaped the work.
+
 ---
 
 ## Problem 1: Vibe Coder Prompts
@@ -172,7 +176,7 @@ How each section is organized:
 
 > wait do you feel like the second one (Order→Inv, Rent→Fac, Price→Inv) is copascetic with instructions?
 
-[Needed because after I picked a strict one-agent routing, I wanted to check it against the assignment's role scopes. The assistant pointed out that strict routing conflicts with full connectivity and with Accounting owning payment requests.]
+[Needed because, when the assistant asked how strict the routing should be, I picked "Boss → only the routed set" with customer orders and price overrides going to Inventory and rent notices to Facilities. I then wanted to check that choice against the assignment's role scopes. The assistant pointed out that strict routing conflicts with full connectivity and with Accounting owning payment requests.]
 
 **Follow-up:**
 
@@ -249,12 +253,12 @@ How each section is organized:
 >
 > Please also write a short paragrah about why a user would like this (gamified, fun to see the agents score, etc)
 
-
 **Follow-up** (sent with my Problem 9 prompt; logged here because it changes the Problem 8 dashboard):
 
 > One more wuick design thing - the ticket/basketball should get passed between agents that are working on it (so if it starts with the boss agent, it goes to them first, THEN passed to another agent, then passed to any othe rhelper agents, before getting swished in the basket by the lead agent assigned. (please make sure all of the updates from this are recorded appropriately - might make sense to split this part of my message off into prompt 8 section fo the prompts folder - please make sure that everything in prompt 8 around descriptions etc happens to this)
 
 [Needed because in the first version every specialist took its own shot when it finished. I wanted one ticket ball passed along the real handoff chain (Boss, then the routed specialist, then any helpers) and swished once by the specialist the ticket was assigned to.]
+
 ---
 
 ## Problem 9: Resolve the Tickets
@@ -291,15 +295,39 @@ How each section is organized:
 
 **Follow-up:**
 
+> Can you drop the link for my chrome browser?
+
+[Needed because the first reply pointed me to the app's built-in preview pane, and I wanted the plain localhost URL to open the board in Chrome.]
+
+**Follow-up:**
+
 > It froze when the ball went to the coach on the first ticket - can you fix this
 
 [Needed because during the first real run the Boss's first model call through Portkey hung for about 90 seconds, so the board looked frozen with the ball in the coach's hands. That run also showed Inventory recommending an invoice payment without handing off to Accounting, which the fix addressed too.]
 
 **Follow-up:**
 
+> Can you remind me what ticket 101 was?
+
+[Needed because I wanted the ticket's details again while the assistant was explaining what went wrong on the first 101 run.]
+
+**Follow-up:**
+
 > ok i ran all the tickets!
 
-[Needed to tell the assistant the runs were done so it could check the results in the database and the audit trail before writing up the Actual sections, the Cash tab, and the other outputs.]
+[Needed to tell the assistant the runs were done so it could check the results in the database and the audit trail. The check showed 101 had run on the old code and a routing rule had blocked Accounting's second visit on 103. When asked how to proceed, I picked "Fix, reset, rerun all 3", so the assistant fixed the rule, reset the database, and I replayed all three tickets.]
+
+**Follow-up:**
+
+> Where do i see the accounting page?
+
+[Needed because during the rerun I was looking for where the money side shows up; the assistant pointed me to the approval desk, the cash scoreboard, and Accounting's recap on the board.]
+
+**Follow-up:**
+
+> no sorry i thought i wrote a prompt where we needed a sperate html page for acocunting - can you read my prompts above?
+
+[Needed because my first question was ambiguous: I meant the cash itemization I had asked for in Problem 9, which turned out to be the Cash tab of output/desk_tickets.html rather than a separate page.]
 
 ---
 
@@ -340,6 +368,8 @@ How each section is organized:
 > First, Tauhid could return the tee and request a refund. Customer Service could draft a reply, but the app cant look up a completed sale, confirm the original payment, issue a refund, or put returned stock back into inventory. I would need sales lookup, return, refund-approval, and inventory-adjustment tools, used by Customer Service, Accounting, and Inventory.
 > Second, Bulldog Print Co could say the 12 hoodies shipped, but only ten arrive. The current app records a PO and expected arrival, but cant track a shipment or record what physically arrived. Inventory would need shipment-tracking and goods-receipt tools, probably with a fulfillment agent to manage discrepancies. This is also why marking 103 resolved doesnt prove the order was fulfilled.
 > Third, Campus Customs could need extra staff for a busy Yale event. None of the current tools contain employee availability, skills, hours, or payroll information. I would need a staffing agent with scheduling and availability tools, plus Accounting access to wage estimates and payroll approvals. The current inventory and cash tools could provide some context, but they couldnt build or execute a staffing plan.
+
+[This message also signalled that my clean rerun was finished. The working database had been reset after the run, so when the assistant asked how to restore it, I picked "Replay my run from the audit": the run's recorded database writes, including my four approvals, were re-applied through the MCP tools with no model calls. The assistant then filled in the Problem 9 outputs, and my answers went into the Reflection tab of output/desk_tickets.html.]
 
 ---
 
@@ -424,5 +454,11 @@ How each section is organized:
 > Write the actual public repository URL into output/github_url.txt and commit and push that file too. Confirm that the repository is public and that both database files and all required deliverables are tracked.
 > If GitHub authentication is unavailable, finish all local preparation and tell me the specific step needed to authenticate.
 > When finished, give me the repository URL to paste into Canvas, briefly summarize verification, and flag any remaining submission requirements. I will submit the URL to Canvas myself.
+
+**Follow-up:**
+
+> ok great- can you check that the prompts ai folder looks tight - ie the one where you recorded my prompts?
+
+[Needed as a final check on this file before submission. The review added four short Problem 9 messages that hadn't been logged, noted where I answered the assistant's multiple-choice questions, explained which setup messages are left out, and fixed spacing in Problem 8.]
 
 ---
